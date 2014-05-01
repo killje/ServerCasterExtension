@@ -7,9 +7,9 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.servercaster.main.ServerCaster;
-import me.servercaster.main.event.PreSendingJSONToPlayerEvent;
-import me.servercaster.main.event.PreSendingJSONToServerEvent;
-import me.servercaster.main.event.SendingJSONListner;
+import me.servercaster.main.event.CastListener;
+import me.servercaster.main.event.PreCastEvent;
+import me.servercaster.main.event.PreCastPlayerEvent;
 import net.amoebaman.util.Reflection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,18 +18,16 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  * @author Patrick Beuks (killje) and Floris Huizinga (Flexo013)
  */
-public class ServerUtils extends JavaPlugin implements SendingJSONListner {
-
-    private final Reflection reflection = new Reflection();
+public class ServerUtils extends JavaPlugin implements CastListener {
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        ServerCaster.addSendingMessageListner(this, this);
+        ServerCaster.addMessageListener(this, this);
     }
 
     @Override
-    public void sendingPreServerHandler(PreSendingJSONToServerEvent e) {
+    public void castHandler(PreCastEvent e) {
         ArrayList<String> messages = e.getMessages();
         ArrayList<String> newMessages = new ArrayList<>();
         for (String string : messages) {
@@ -71,7 +69,7 @@ public class ServerUtils extends JavaPlugin implements SendingJSONListner {
     }
 
     @Override
-    public void sendingPrePlayerHandler(PreSendingJSONToPlayerEvent e) {
+    public void castPlayerHandler(PreCastPlayerEvent e) {
         ArrayList<String> messages = e.getMessages();
         ArrayList<String> newMessages = new ArrayList<>();
         for (String string : messages) {
@@ -83,7 +81,7 @@ public class ServerUtils extends JavaPlugin implements SendingJSONListner {
     }
 
     private int getPing(Player p) {
-        Class<?> cp = p.getClass();
+        Class<?> cp = Reflection.getOBCClass("entity.CraftPlayer").cast(p).getClass();
         int returnvalue = -1;
         Object ep;
         try {
