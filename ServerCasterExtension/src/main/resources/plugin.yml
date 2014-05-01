@@ -1,0 +1,6 @@
+name: ServerCasterExtension
+author: [killje, Flexo013]
+description: This plugin adds a few extra commands to ServerCaster 1.8+
+version: 1.0-alpha
+main: me.servercaster.extension.ServerExtension
+depend: [ServerCaster]

@@ -1,4 +1,4 @@
-package me.servercaster.servercasterextension;
+package me.servercaster.extension;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  *
  * @author Patrick Beuks (killje) and Floris Huizinga (Flexo013)
  */
-public class ServerUtils extends JavaPlugin implements CastListener {
+public class ServerExtension extends JavaPlugin implements CastListener {
 
     @Override
     public void onEnable() {
@@ -33,8 +33,12 @@ public class ServerUtils extends JavaPlugin implements CastListener {
         for (String string : messages) {
             Random rand = new Random();
             Player[] onlinePlayers = this.getServer().getOnlinePlayers();
-            string = string.toLowerCase().replace(("%RDMPLAYER%").toLowerCase(), onlinePlayers[rand.nextInt(onlinePlayers.length)].getName());
-            string = string.toLowerCase().replace(("%SLOTS%").toLowerCase(), this.getServer().getMaxPlayers() + "");
+            if (onlinePlayers.length != 0) {
+                string = string.toLowerCase().replace(("%RDMPLAYER%").toLowerCase(), onlinePlayers[rand.nextInt(onlinePlayers.length)].getName());
+            }
+            getLogger().info(string);
+            string = string.replaceAll("(?i)%SLOTS%", this.getServer().getMaxPlayers() + "");
+            getLogger().info(string);
             string = string.toLowerCase().replace(("%PLAYERS%").toLowerCase(), onlinePlayers.length + "");
             if (string.toLowerCase().contains(("%ONLINEPLAYERS%").toLowerCase())) {
                 String players = "";
@@ -81,15 +85,16 @@ public class ServerUtils extends JavaPlugin implements CastListener {
     }
 
     private int getPing(Player p) {
-        Class<?> cp = Reflection.getOBCClass("entity.CraftPlayer").cast(p).getClass();
-        int returnvalue = -1;
-        Object ep;
-        try {
-            ep = Reflection.getMethod(cp, "getHandler").invoke(null);
-            returnvalue = Reflection.getField(ep.getClass(), "ping").getInt(ep);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            Logger.getLogger(ServerUtils.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return returnvalue;
+        return 1;
+//        Class<?> cp = Reflection.getOBCClass("entity.CraftPlayer").cast(p).getClass();
+//        int returnvalue = -1;
+//        Object ep;
+//        try {
+//            ep = Reflection.getMethod(cp, "getHandler").invoke(null);
+//            returnvalue = Reflection.getField(ep.getClass(), "ping").getInt(ep);
+//        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+//            Logger.getLogger(ServerExtension.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return returnvalue;
     }
 }
