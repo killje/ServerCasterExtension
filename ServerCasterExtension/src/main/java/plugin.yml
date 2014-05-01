@@ -1,0 +1,6 @@
+name: ServerUtils
+author: [killje, Flexo013]
+description: This plugin adds a f ew extra commands to ServerCaster 1.8+
+version: 1.0
+main: serverutils.ServerUtils
+depends: ServerCaster
